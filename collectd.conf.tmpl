@@ -40,7 +40,11 @@ LoadPlugin write_graphite
         {{else}}
         Port "2003"
         {{end}}
+        {{if $config.protocol}}
+        Protocol "{{$config.protocol}}"
+        {{else}}
         Protocol "udp"
+        {{end}}
         LogSendErrors true
         {{if $config.prefix}}
         Prefix "{{$config.prefix}}"
