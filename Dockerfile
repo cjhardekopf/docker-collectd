@@ -1,10 +1,15 @@
-FROM lopter/collectd-graphite
+FROM cjhardekopf/confd
 MAINTAINER Chris Hardekopf <cjh@ygdrasill.com>
 
-# Add the new configuration
-ADD storage-schemas.conf /opt/graphite/conf/
-ADD storage-aggregation.conf /opt/graphite/conf/
+# Install collectd
+RUN apt-get update && apt-get install -y collectd
 
-# sshd, gunicorn, collectd, carbon/plaintext, carbon/pickle, carbon/amqp
-EXPOSE 22 8080 25826/udp 2003 2004 7002
-CMD ["supervisord","-n"]
+# Set up confd configuration
+ADD collectd.conf.tmpl /etc/confd/templates/
+ADD collectd.toml /etc/confd/conf.d/
+
+# Set up supervisor configuration
+ADD collectd.conf /etc/supervisor/conf.d/
+
+# Expose collectd
+EXPOSE 25826/udp

@@ -1,0 +1,55 @@
+# Simple config file for colllectd that just listens on the network and
+# forwards everything to an external graphite server.
+
+{{$config := json (getv "/collectd")}}
+
+# Global
+Hostname "localhost"
+#FQDNLookup true
+#BaseDir "/var/lib/collectd"
+#PluginDir "/usr/lib/collectd"
+#TypesDB "/usr/share/collectd/types.db" "/etc/collectd/my_types.db"
+
+# Logging
+LoadPlugin logfile
+
+<Plugin logfile>
+	LogLevel "info"
+    File STDOUT
+    Timestamp true
+    PrintSeverity false
+</Plugin>
+
+# Plugins
+LoadPlugin network
+LoadPlugin write_graphite
+
+<Plugin network>
+    # server setup:
+    Listen "0.0.0.0" "25826"
+
+    # statistics about the network plugin itself
+    ReportStats false
+</Plugin>
+
+<Plugin write_graphite>
+    <Node "graphite">
+        Host "{{$config.host}}"
+        {{if $config.port}}
+        Port "{{$config.port}}"
+        {{else}}
+        Port "2003"
+        {{end}}
+        Protocol "udp"
+        LogSendErrors true
+        {{if $config.prefix}}
+        Prefix "{{$config.prefix}}"
+        {{end}}
+        {{if $config.postfix}}
+        Postfix "{{$config.postfix}}"
+        {{end}}
+        StoreRates true
+        AlwaysAppendDS false
+        EscapeCharacter "_"
+    </Node>
+</Plugin>

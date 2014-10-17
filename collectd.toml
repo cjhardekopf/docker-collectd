@@ -1,0 +1,7 @@
+[template]
+src = "collectd.conf.tmpl"
+dest = "/etc/collectd/collectd.conf"
+keys = [
+	"/collectd",
+]
+reload_cmd = "/usr/bin/supervisorctl restart collectd"
