@@ -14,5 +14,4 @@ ADD collectd.conf /etc/supervisor/conf.d/
 # Expose collectd
 EXPOSE 25826/udp
 
-ENTRYPOINT [ "/opt/start" ]
 
