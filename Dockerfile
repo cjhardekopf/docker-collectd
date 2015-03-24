@@ -3,7 +3,7 @@ MAINTAINER Chris Hardekopf <cjh@ygdrasill.com>
 
 # Install collectd
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive  apt-get install -y collectd && \
+    DEBIAN_FRONTEND=noninteractive  apt-get install -y collectd --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
 # Expose collectd
